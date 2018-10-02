@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamShopX.Views.ProductsPage"
+             x:Name="ProductList"
+             Title="Product">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="New" Command="{Binding NewCommand}"/>
+    </ContentPage.ToolbarItems>
+    
+    <ListView ItemsSource="{Binding Products}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ImageCell ImageSource="{Binding ImageThumbnail}"
+                               Text="{Binding ProductName}"
+                               Detail="{Binding ShortDescription}">
+                    <ImageCell.ContextActions>
+                        <MenuItem Text="Delete"
+                                      Command="{Binding BindingContext.DeleteCommand, Source={x:Reference ProductList}}"
+                                      CommandParameter="{Binding}"/>
+                        <MenuItem Text="Edit"
+                                      Command="{Binding BindingContext.EditCommand, Source={x:Reference ProductList}}"
+                                      CommandParameter="{Binding}"/>
+                    </ImageCell.ContextActions>
+                </ImageCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

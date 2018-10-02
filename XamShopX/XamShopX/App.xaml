@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<unity:PrismApplication
+    xmlns:unity="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="XamShopX.App">
+    <Application.Resources>
+
+    </Application.Resources>
+</unity:PrismApplication>

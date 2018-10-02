@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamShopX.Views.EditProductPage"
+             Title="{Binding Title}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <TableView BackgroundColor="White" Intent="Settings">
+        <TableRoot>
+            <TableSection>
+                <EntryCell Label="Product Name"
+                           Keyboard="Text"
+                           Text="{Binding Product.ProductName}"/>
+
+                <EntryCell Label="Short Description"
+                           Keyboard="Text"
+                           Text="{Binding Product.ShortDescription}"/>
+
+                <EntryCell Label="Full Description"
+                           Keyboard="Text"
+                           Text="{Binding Product.FullDescription}"/>
+
+                <EntryCell Label="Category"
+                           Keyboard="Text"
+                           Text="{Binding Product.Category}"/>
+
+                <EntryCell Label="Price"
+                           Keyboard="Numeric"
+                           Text="{Binding Product.Price}"/>
+
+                <EntryCell Label="Image Thumbnail"
+                           Keyboard="Text"
+                           Text="{Binding Product.ImageThumbnail}"/>
+
+            </TableSection>
+        </TableRoot>
+    </TableView>
+</ContentPage>
