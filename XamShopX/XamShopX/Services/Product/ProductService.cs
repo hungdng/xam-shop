@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using XamShopX.Constants;
@@ -14,30 +15,37 @@ namespace XamShopX.Services.Product
     {
         private readonly IRequestService _requestService;
 
+        public ObservableCollection<Models.Product> ProductList { get; set; }
+
         public ProductService(IRequestService requestService)
         {
             _requestService = requestService;
         }
 
-        public async Task<Models.Product> AddNewProductAsync(Models.Product product, string token = "")
+        public async Task AddNewProductAsync(Models.Product product, string token = "")
         {
             UriBuilder builder = new UriBuilder(AppSettings.BaseEndpoint);
             builder.AppendToPath("products");
 
             string uri = builder.ToString();
 
-            return await _requestService.PostAsync(uri, product, token);
+            var result =  await _requestService.PostAsync(uri, product, token);
+
+            ProductList.Add(result);
+            await Task.CompletedTask;
         }
 
-        //public async Task DeleteProductAsync(string id, string token = "")
-        //{
-        //    UriBuilder builder = new UriBuilder(AppSettings.BaseEndpoint);
-        //    builder.AppendToPath("products");
+        public async Task DeleteProductAsync(Models.Product product, string token = "")
+        {
+            UriBuilder builder = new UriBuilder(AppSettings.BaseEndpoint);
+            builder.AppendToPath($"products/{product.Id}");
 
-        //    string uri = builder.ToString();
+            string uri = builder.ToString();
 
-        //    await _requestService.DeleteAsync<ObservableCollection<Models.Product>>(uri, token);
-        //}
+            ProductList.Remove(product);
+
+            await _requestService.DeleteAsync<ObservableCollection<Models.Product>>(uri, token);
+        }
 
         public async Task<ObservableCollection<Models.Product>> GetProductsAsync(string categoryId, string token = "")
         {
@@ -46,18 +54,31 @@ namespace XamShopX.Services.Product
 
             string uri = builder.ToString();
 
-            var response = await _requestService.GetAsync<ObservableCollection<Models.Product>>(uri, token);
-            return response;
+            ProductList =  await _requestService.GetAsync<ObservableCollection<Models.Product>>(uri, token);
+            return await Task.FromResult(ProductList);
         }
 
-        public async Task<Models.Product> UpdateProductAsync(Models.Product product, string token = "")
+        public async Task UpdateProductAsync(Models.Product product, string token = "")
         {
             UriBuilder builder = new UriBuilder(AppSettings.BaseEndpoint);
-            builder.AppendToPath("products");
+            builder.AppendToPath($"products/{product.Id}");
 
             string uri = builder.ToString();
 
-            return await _requestService.PutAsync(uri, product, token);
+            var result = await _requestService.PutAsync(uri, product, token);
+
+            ProductList[ProductList.IndexOf(product)] = result;
+        }
+
+        public async Task<Models.Product> GetProductByIdAsync(string productId, string token = "")
+        {
+            UriBuilder builder = new UriBuilder(AppSettings.BaseEndpoint);
+            builder.AppendToPath($"products/{productId}");
+
+            string uri = builder.ToString();
+
+            var product = await _requestService.GetAsync<Models.Product>(uri, token);
+            return await Task.FromResult(product);
         }
     }
 }

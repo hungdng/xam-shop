@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Prism.Services;
 
 namespace XamShopX.Services.Base
 {
@@ -16,8 +17,9 @@ namespace XamShopX.Services.Base
     {
 
         private readonly JsonSerializerSettings _serializerSettings;
+        private readonly IPageDialogService _dialogService;
 
-        public RequestService()
+        public RequestService(IPageDialogService dialogService)
         {
             _serializerSettings = new JsonSerializerSettings
             {
@@ -27,6 +29,8 @@ namespace XamShopX.Services.Base
             };
 
             _serializerSettings.Converters.Add(new StringEnumConverter());
+
+            _dialogService = dialogService;
         }
 
         public async Task<TResult> GetAsync<TResult>(string uri, string token = "")
@@ -78,17 +82,15 @@ namespace XamShopX.Services.Base
             return await Task.Run(() => JsonConvert.DeserializeObject<TResult>(responseData, _serializerSettings));
         }
 
-        //public async Task DeleteAsync<TResult>(string uri, string token = "")
-        //{
-        //    HttpClient httpClient = CreateHttpClient(token);
-        //    HttpResponseMessage response = await httpClient.DeleteAsync(uri);
+        public async Task DeleteAsync<TResult>(string uri, string token = "")
+        {
+            HttpClient httpClient = CreateHttpClient(token);
+            HttpResponseMessage response = await httpClient.DeleteAsync(uri);
 
-        //    await HandleResponse(response);
+            await HandleResponse(response);
 
-        //    string responseData = await response.Content.ReadAsStringAsync();
-
-        //    await Task.Run(() => JsonConvert.DeserializeObject<TResult>(responseData, _serializerSettings));
-        //}
+            await Task.CompletedTask;
+        }
 
 
         private bool IsEmail(string email)
@@ -129,7 +131,8 @@ namespace XamShopX.Services.Base
                     throw new Exception(content);
                 }
 
-                throw new HttpRequestException(content);
+                // throw new HttpRequestException(content);
+                await _dialogService.DisplayAlertAsync("", content, "OK");
             }
         }
     }

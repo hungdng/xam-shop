@@ -30,13 +30,13 @@ namespace XamShopX.ViewModels.Product
             }
             else
             {
-                _productService.AddNewProductAsync(Product);
+                var respons = _productService.AddNewProductAsync(Product);
             }
 
             NavigationService.GoBackAsync();
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
 
@@ -44,6 +44,10 @@ namespace XamShopX.ViewModels.Product
             {
                 var id = parameters["id"];
                 Title = "Edit Product";
+
+                var temp = _productService.GetProductByIdAsync(id.ToString());
+
+                Product = (await temp).Clone() as Models.Product;
             }
             else
             {

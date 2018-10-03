@@ -17,7 +17,7 @@ namespace XamShopX.Services.Base
 
         Task<TResult> PutAsync<TRequest, TResult>(string uri, TRequest data, string token = "");
 
-        //Task DeleteAsync<TResult>(string uri, string token = "");
+        Task DeleteAsync<TResult>(string uri, string token = "");
 
     }
 }

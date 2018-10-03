@@ -23,14 +23,14 @@ namespace XamShopX.ViewModels.Product
 
             NewCommand = new DelegateCommand(NewExcute);
             EditCommand = new DelegateCommand<Models.Product>(EditExecute);
-            DeleteCommand = new DelegateCommand<string>(DeleteExcute);
+            DeleteCommand = new DelegateCommand<Models.Product>(DeleteExcute);
         }
 
-        private async void DeleteExcute(string id)
+        private async void DeleteExcute(Models.Product obj)
         {
             using (UserDialogs.Instance.Loading("Loading"))
             {
-                await _productService.GetProductsAsync(id.ToString());
+                await _productService.DeleteProductAsync(obj);
             }
         }
 
