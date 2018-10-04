@@ -8,7 +8,7 @@ namespace XamShopX.Services.Product
 {
     public interface IProductService
     {
-        Task<ObservableCollection<Models.Product>> GetProductsAsync(string categoryId, string token = "");
+        Task<IEnumerable<Models.Product>> GetProductsAsync(string categoryId, string token = "");
 
         Task<Models.Product> GetProductByIdAsync(string productId, string token = "");
 

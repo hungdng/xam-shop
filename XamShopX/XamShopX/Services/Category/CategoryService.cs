@@ -23,14 +23,14 @@ namespace XamShopX.Services.Category
             _requestService = requestService;
         }
 
-        public async Task<ObservableCollection<Models.Category>> GetCategoriesAsync(string token= "")
+        public async Task<IEnumerable<Models.Category>> GetCategoriesAsync(string token= "")
         {
             UriBuilder builder = new UriBuilder(AppSettings.BaseEndpoint);
             builder.AppendToPath("Categories");
 
             string uri = builder.ToString();
 
-            var response = await _requestService.GetAsync<ObservableCollection<Models.Category>>(uri, token);
+            var response = await _requestService.GetAsync<IEnumerable<Models.Category>>(uri, token);
             return response;
         }
     }

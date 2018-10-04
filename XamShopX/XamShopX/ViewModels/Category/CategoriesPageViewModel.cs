@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Acr.UserDialogs;
 using Prism.Commands;
 using Prism.Navigation;
+using XamShopX.Extensions;
 using XamShopX.Models;
 using XamShopX.Services.Category;
 using XamShopX.ViewModels.Base;
@@ -18,6 +19,7 @@ namespace XamShopX.ViewModels.Category
     {
         private readonly ICategoryService _categoryService;
         private ObservableCollection<Models.Category> _categories;
+
         public CategoriesPageViewModel(INavigationService navigationService, ICategoryService categoryService) : base(navigationService)
         {
             _categoryService = categoryService;
@@ -47,9 +49,19 @@ namespace XamShopX.ViewModels.Category
 
             if (Categories != null && Categories.Any())
                 return;
-            using (UserDialogs.Instance.Loading("Loading"))
+            try
             {
-                Categories = await _categoryService.GetCategoriesAsync();
+                IsBusy = true;
+                var categories = await _categoryService.GetCategoriesAsync();
+                Categories = categories.ToObservableCollection();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Get Categories] Error: {ex}");
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

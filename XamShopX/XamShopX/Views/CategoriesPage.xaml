@@ -6,14 +6,22 @@
              x:Name="RootPage">
 
 
-    <ListView ItemsSource="{Binding Categories}">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <TextCell Text="{Binding CategoryName}"
+    <ContentPage.Content>
+        <Grid>
+            <ListView ItemsSource="{Binding Categories}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding CategoryName}"
                               Command="{Binding BindingContext.GoToProductCommand, Source={x:Reference RootPage}}"
                           CommandParameter="{Binding}"/>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
-    
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ActivityIndicator HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               Color="#FF5722" 
+                               IsRunning="{Binding IsBusy}" 
+                               IsVisible="{Binding IsBusy}"/>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

@@ -7,23 +7,33 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="New" Command="{Binding NewCommand}"/>
     </ContentPage.ToolbarItems>
-    
-    <ListView ItemsSource="{Binding Products}">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <ImageCell ImageSource="{Binding ImageThumbnail}"
+
+    <ContentPage.Content>
+        <Grid>
+            <ListView ItemsSource="{Binding Products}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ImageCell ImageSource="{Binding ImageThumbnail}"
                                Text="{Binding ProductName}"
                                Detail="{Binding ShortDescription}">
-                    <ImageCell.ContextActions>
-                        <MenuItem Text="Delete"
+                            <ImageCell.ContextActions>
+                                <MenuItem Text="Delete"
                                       Command="{Binding BindingContext.DeleteCommand, Source={x:Reference ProductList}}"
                                       CommandParameter="{Binding}"/>
-                        <MenuItem Text="Edit"
+                                <MenuItem Text="Edit"
                                       Command="{Binding BindingContext.EditCommand, Source={x:Reference ProductList}}"
                                       CommandParameter="{Binding}"/>
-                    </ImageCell.ContextActions>
-                </ImageCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+                            </ImageCell.ContextActions>
+                        </ImageCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+            <ActivityIndicator HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               Color="#FF5722" 
+                               IsRunning="{Binding IsBusy}" 
+                               IsVisible="{Binding IsBusy}"/>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Acr.UserDialogs;
 using Prism.Commands;
 using Prism.Navigation;
+using XamShopX.Extensions;
 using XamShopX.Models;
 using XamShopX.Services.Product;
 using XamShopX.ViewModels.Base;
@@ -17,6 +19,7 @@ namespace XamShopX.ViewModels.Product
     {
         private readonly IProductService _productService;
         private ObservableCollection<Models.Product> _products;
+
         public ProductsPageViewModel(INavigationService navigationService, IProductService productService) : base(navigationService)
         {
             _productService = productService;
@@ -28,10 +31,11 @@ namespace XamShopX.ViewModels.Product
 
         private async void DeleteExcute(Models.Product obj)
         {
-            using (UserDialogs.Instance.Loading("Loading"))
-            {
-                await _productService.DeleteProductAsync(obj);
-            }
+            IsBusy = true;
+
+            await _productService.DeleteProductAsync(obj);
+
+            IsBusy = false;
         }
 
         private void EditExecute(Models.Product obj)
@@ -55,9 +59,19 @@ namespace XamShopX.ViewModels.Product
                 if (Products != null && Products.Any())
                     return;
 
-                using (UserDialogs.Instance.Loading("Loading"))
+                try
                 {
-                    Products = await _productService.GetProductsAsync(id.ToString());
+                    IsBusy = true;
+                    var products = await _productService.GetProductsAsync(id.ToString());
+                    Products = products.ToObservableCollection();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Get Products] Error: {ex}");
+                }
+                finally
+                {
+                    IsBusy = false;
                 }
             }
         }

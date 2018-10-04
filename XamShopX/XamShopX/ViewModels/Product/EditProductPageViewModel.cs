@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Navigation;
+using XamShopX.Services.Category;
 using XamShopX.Services.Product;
 using XamShopX.ViewModels.Base;
 
@@ -13,41 +18,64 @@ namespace XamShopX.ViewModels.Product
     {
         private Models.Product _product;
         private string _title;
+        private int _categorySelectedIndex;
+        private List<Models.Category> _categories;
         private IProductService _productService;
+        private ICategoryService _categoryService;
 
-        public EditProductPageViewModel(INavigationService navigationService, IProductService productService) : base(navigationService)
+        public EditProductPageViewModel(INavigationService navigationService, 
+            IProductService productService, ICategoryService categoryService) : base(navigationService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
+
 
         public ICommand SaveCommand => new DelegateCommand(SaveExecute);
 
-        private void SaveExecute()
+        private async void SaveExecute()
         {
             if (!string.IsNullOrEmpty(Product.Id))
             {
-                _productService.UpdateProductAsync(Product);
+               await _productService.UpdateProductAsync(Product);
             }
             else
             {
-                var respons = _productService.AddNewProductAsync(Product);
+                await _productService.AddNewProductAsync(Product);
             }
 
-            NavigationService.GoBackAsync();
+            await NavigationService.GoBackAsync();
         }
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
 
+            // load categories
+            var categories = await _categoryService.GetCategoriesAsync();
+            Categories = categories.ToList();
+
             if (parameters.ContainsKey("id"))
             {
-                var id = parameters["id"];
-                Title = "Edit Product";
+                try
+                {
+                    IsBusy = true;
+                    var id = parameters["id"];
+                    Title = "Edit Product";
 
-                var temp = _productService.GetProductByIdAsync(id.ToString());
+                    var temp = _productService.GetProductByIdAsync(id.ToString());
 
-                Product = (await temp).Clone() as Models.Product;
+                    Product = (await temp).Clone() as Models.Product;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Get Product Detail] Error: {ex}");
+                }
+
+                finally
+                {
+                    IsBusy = false;
+                }
             }
             else
             {
@@ -67,6 +95,24 @@ namespace XamShopX.ViewModels.Product
         {
             get => _title;
             set => SetProperty(ref _title, value);
+        }
+
+        public List<Models.Category> Categories
+        {
+            get => _categories;
+            set => SetProperty(ref _categories, value);
+        }
+
+        public int CategorySelectedIndex
+        {
+            get => _categorySelectedIndex;
+            set
+            {
+                SetProperty(ref _categorySelectedIndex, value);
+
+                if(_categorySelectedIndex > -1)
+                    Product.Category = Categories[_categorySelectedIndex].Id;
+            }
         }
         #endregion
     }

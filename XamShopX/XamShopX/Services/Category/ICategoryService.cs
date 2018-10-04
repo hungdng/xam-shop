@@ -8,6 +8,6 @@ namespace XamShopX.Services.Category
 {
     public interface ICategoryService
     {
-        Task<ObservableCollection<Models.Category>> GetCategoriesAsync(string token = "");
+        Task<IEnumerable<Models.Category>> GetCategoriesAsync(string token = "");
     }
 }

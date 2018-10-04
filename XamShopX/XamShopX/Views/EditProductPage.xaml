@@ -7,34 +7,61 @@
         <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <TableView BackgroundColor="White" Intent="Settings">
-        <TableRoot>
-            <TableSection>
-                <EntryCell Label="Product Name"
+    <ContentPage.Content>
+        <Grid>
+            <TableView BackgroundColor="White" Intent="Settings">
+                <TableRoot>
+                    <TableSection>
+                        <EntryCell Label="Product Name"
                            Keyboard="Text"
                            Text="{Binding Product.ProductName}"/>
 
-                <EntryCell Label="Short Description"
+                        <EntryCell Label="Short Description"
                            Keyboard="Text"
                            Text="{Binding Product.ShortDescription}"/>
 
-                <EntryCell Label="Full Description"
+                        <EntryCell Label="Full Description"
                            Keyboard="Text"
                            Text="{Binding Product.FullDescription}"/>
 
-                <EntryCell Label="Category"
+                        <!--<EntryCell Label="Category"
                            Keyboard="Text"
-                           Text="{Binding Product.Category}"/>
+                           Text="{Binding Product.Category}"/>-->
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="7*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="Category" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                                    <Picker Grid.Column="1" Title="--Select--" 
+                                            ItemsSource="{Binding Categories}"
+                                            ItemDisplayBinding="{Binding CategoryName}"
+                                            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                            SelectedIndex="{Binding CategorySelectedIndex, Mode=TwoWay}"/>
+                                </Grid>
+                               
+                            </ViewCell.View>
+                        </ViewCell>
+                        
 
-                <EntryCell Label="Price"
+                        <EntryCell Label="Price"
                            Keyboard="Numeric"
                            Text="{Binding Product.Price}"/>
 
-                <EntryCell Label="Image Thumbnail"
+                        <EntryCell Label="Image Thumbnail"
                            Keyboard="Text"
                            Text="{Binding Product.ImageThumbnail}"/>
 
-            </TableSection>
-        </TableRoot>
-    </TableView>
+                    </TableSection>
+                </TableRoot>
+            </TableView>
+            <ActivityIndicator HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               Color="#FF5722" 
+                               IsRunning="{Binding IsBusy}" 
+                               IsVisible="{Binding IsBusy}"/>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

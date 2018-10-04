@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using XamShopX.Constants;
 using XamShopX.Extensions;
-using XamShopX.Models;
 using XamShopX.Services.Base;
 
 namespace XamShopX.Services.Product
@@ -15,7 +12,7 @@ namespace XamShopX.Services.Product
     {
         private readonly IRequestService _requestService;
 
-        public ObservableCollection<Models.Product> ProductList { get; set; }
+        //public ObservableCollection<Models.Product> Products { get; set; }
 
         public ProductService(IRequestService requestService)
         {
@@ -31,7 +28,7 @@ namespace XamShopX.Services.Product
 
             var result =  await _requestService.PostAsync(uri, product, token);
 
-            ProductList.Add(result);
+            //Products.Add(result);
             await Task.CompletedTask;
         }
 
@@ -42,20 +39,22 @@ namespace XamShopX.Services.Product
 
             string uri = builder.ToString();
 
-            ProductList.Remove(product);
-
             await _requestService.DeleteAsync<ObservableCollection<Models.Product>>(uri, token);
+
+            //Products.Remove(product);
         }
 
-        public async Task<ObservableCollection<Models.Product>> GetProductsAsync(string categoryId, string token = "")
+        public async Task<IEnumerable<Models.Product>> GetProductsAsync(string categoryId, string token = "")
         {
             UriBuilder builder = new UriBuilder(AppSettings.BaseEndpoint);
             builder.AppendToPath($"categories/{categoryId}/products");
 
             string uri = builder.ToString();
 
-            ProductList =  await _requestService.GetAsync<ObservableCollection<Models.Product>>(uri, token);
-            return await Task.FromResult(ProductList);
+            var products =  await _requestService.GetAsync<IEnumerable<Models.Product>>(uri, token);
+           // Products = products.ToObservableCollection();
+
+            return await Task.FromResult(products);
         }
 
         public async Task UpdateProductAsync(Models.Product product, string token = "")
@@ -67,7 +66,9 @@ namespace XamShopX.Services.Product
 
             var result = await _requestService.PutAsync(uri, product, token);
 
-            ProductList[ProductList.IndexOf(product)] = result;
+            //Products[Products.IndexOf(product)] = result;
+
+            await Task.CompletedTask;
         }
 
         public async Task<Models.Product> GetProductByIdAsync(string productId, string token = "")

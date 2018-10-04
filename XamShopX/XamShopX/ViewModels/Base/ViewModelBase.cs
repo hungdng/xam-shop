@@ -5,9 +5,23 @@ namespace XamShopX.ViewModels.Base
 {
     public class ViewModelBase : BindableBase, INavigationAware
     {
+        private bool _isBusy;
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
+        }
+
+        public bool IsBusy
+        {
+            get
+            {
+                return _isBusy;
+            }
+
+            set
+            {
+                SetProperty(ref _isBusy, value);
+            }
         }
 
         protected INavigationService NavigationService { get; }
