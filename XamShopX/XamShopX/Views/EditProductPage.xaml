@@ -38,8 +38,7 @@
                                     <Picker Grid.Column="1" Title="--Select--" 
                                             ItemsSource="{Binding Categories}"
                                             ItemDisplayBinding="{Binding CategoryName}"
-                                            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                                            SelectedIndex="{Binding CategorySelectedIndex, Mode=TwoWay}"/>
+                                            SelectedItem="{Binding CategorySelectedItem, Mode=TwoWay}"/>
                                 </Grid>
                                
                             </ViewCell.View>
@@ -50,13 +49,31 @@
                            Keyboard="Numeric"
                            Text="{Binding Product.Price}"/>
 
-                        <EntryCell Label="Image Thumbnail"
+                        <!--<EntryCell Label="Image Thumbnail"
                            Keyboard="Text"
-                           Text="{Binding Product.ImageThumbnail}"/>
+                           Text="{Binding Product.ImageThumbnail}"/>-->
+
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="Image Thumbnail" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                                    <Entry Grid.Column="1" Keyboard="Text"
+                                           Text="{Binding Product.ImageThumbnail}"/>
+                                    <Button Grid.Column="2" Text="Choose" Command="{Binding OpenFileCommand}"/>
+                                </Grid>
+
+                            </ViewCell.View>
+                        </ViewCell>
 
                     </TableSection>
                 </TableRoot>
             </TableView>
+            
             <ActivityIndicator HorizontalOptions="Center" 
                                VerticalOptions="Center" 
                                Color="#FF5722" 
